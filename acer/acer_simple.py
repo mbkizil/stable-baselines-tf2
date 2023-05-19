@@ -3,6 +3,7 @@ import warnings
 
 import numpy as np
 import tensorflow as tf
+import tensorflow_probability as tfp
 from gym.spaces import Discrete, Box
 from collections import deque
 
@@ -326,10 +327,10 @@ class ACER(ActorCriticRLModel):
                     rho, rho_i_ = None, None
                     if continuous:
                         action_ = strip(train_model.proba_distribution.sample(), self.n_envs, self.n_steps)
-                        distribution_f = tf.contrib.distributions.MultivariateNormalDiag(
+                        distribution_f = tfp.distributions.MultivariateNormalDiag(
                             loc=strip(train_model.proba_distribution.mean, self.n_envs, self.n_steps),
                             scale_diag=strip(train_model.proba_distribution.logstd, self.n_envs, self.n_steps))
-                        f_polyak = tf.contrib.distributions.MultivariateNormalDiag(
+                        f_polyak = tfp.distributions.MultivariateNormalDiag(
                             loc=strip(polyak_model.proba_distribution.mean, self.n_envs, self.n_steps),
                             scale_diag=strip(polyak_model.proba_distribution.logstd, self.n_envs, self.n_steps))
 
