@@ -135,7 +135,8 @@ class FeedForwardPolicy(DDPGPolicy):
             for i, layer_size in enumerate(self.layers):
                 pi_h = tf.compat.v1.layers.dense(pi_h, layer_size, name='fc' + str(i))
                 if self.layer_norm:
-                    pi_h = tf.contrib.layers.layer_norm(pi_h, center=True, scale=True)
+                    #pi_h = tf.contrib.layers.layer_norm(pi_h, center=True, scale=True)
+                    pi_h = tf.keras.layers.LayerNormalization(pi_h, center=True, scale=True)
                 pi_h = self.activ(pi_h)
             self.policy = tf.nn.tanh(tf.compat.v1.layers.dense(pi_h, self.ac_space.shape[0], name=scope,
                                                      kernel_initializer=tf.compat.v1.random_uniform_initializer(minval=-3e-3,
@@ -156,7 +157,8 @@ class FeedForwardPolicy(DDPGPolicy):
             for i, layer_size in enumerate(self.layers):
                 qf_h = tf.compat.v1.layers.dense(qf_h, layer_size, name='fc' + str(i))
                 if self.layer_norm:
-                    qf_h = tf.contrib.layers.layer_norm(qf_h, center=True, scale=True)
+                    #qf_h = tf.contrib.layers.layer_norm(qf_h, center=True, scale=True)
+                    qf_h = tf.keras.layers.LayerNormalization(qf_h, center=True, scale=True)
                 qf_h = self.activ(qf_h)
                 if i == 0:
                     qf_h = tf.concat([qf_h, action], axis=-1)
