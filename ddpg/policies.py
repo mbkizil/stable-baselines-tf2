@@ -139,7 +139,7 @@ class FeedForwardPolicy(DDPGPolicy):
                     pi_h = tf.keras.layers.LayerNormalization(pi_h, center=True, scale=True)
                 pi_h = self.activ(pi_h)
             self.policy = tf.nn.tanh(tf.keras.layers.Dense( self.ac_space.shape[0], name=scope,
-                                                     kernel_initializer=tf.compat.v1.random_uniform_initializer(minval=-3e-3,
+                                                     kernel_initializer=tf.random_uniform_initializer(minval=-3e-3,
                                                                                                       maxval=3e-3))(pi_h))
         return self.policy
 
@@ -165,8 +165,8 @@ class FeedForwardPolicy(DDPGPolicy):
 
             # the name attribute is used in pop-art normalization
             qvalue_fn = tf.keras.layers.Dense(1, name='qf_output',
-                                        kernel_initializer=tf.compat.v1.random_uniform_initializer(minval=-3e-3,
-                                                                                         maxval=3e-3)(qf_h))
+                                        kernel_initializer=tf.random_uniform_initializer(minval=-3e-3,
+                                                                                         maxval=3e-3))(qf_h)
 
             self.qvalue_fn = qvalue_fn
             self._qvalue = qvalue_fn[:, 0]
