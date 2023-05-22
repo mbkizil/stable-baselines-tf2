@@ -131,7 +131,7 @@ class FeedForwardPolicy(DDPGPolicy):
             if self.feature_extraction == "cnn":
                 pi_h = self.cnn_extractor(obs, **self.cnn_kwargs)
             else:
-                pi_h = tf.keras.layers.Flatten()(obs)
+                pi_h = tf.keras.layers.Flatten(obs)
             for i, layer_size in enumerate(self.layers):
                 pi_h = tf.keras.layers.Dense(pi_h, layer_size, name='fc' + str(i))
                 if self.layer_norm:
@@ -153,9 +153,9 @@ class FeedForwardPolicy(DDPGPolicy):
             if self.feature_extraction == "cnn":
                 qf_h = self.cnn_extractor(obs, **self.cnn_kwargs)
             else:
-                qf_h = tf.keras.layers.Flatten()(obs)
+                qf_h = tf.compat.v1.layers.flatten(obs)
             for i, layer_size in enumerate(self.layers):
-                qf_h = tf.keras.layers.Dense(qf_h, layer_size, name='fc' + str(i))
+                qf_h = tf.compat.v1.layers.dense(qf_h, layer_size, name='fc' + str(i))
                 if self.layer_norm:
                     #qf_h = tf.contrib.layers.layer_norm(qf_h, center=True, scale=True)
                     qf_h = tf.keras.layers.LayerNormalization(qf_h, center=True, scale=True)
@@ -164,7 +164,7 @@ class FeedForwardPolicy(DDPGPolicy):
                     qf_h = tf.concat([qf_h, action], axis=-1)
 
             # the name attribute is used in pop-art normalization
-            qvalue_fn = tf.keras.layers.Dense(qf_h, 1, name='qf_output',
+            qvalue_fn = tf.compat.v1.layers.dense(qf_h, 1, name='qf_output',
                                         kernel_initializer=tf.compat.v1.random_uniform_initializer(minval=-3e-3,
                                                                                          maxval=3e-3))
 
