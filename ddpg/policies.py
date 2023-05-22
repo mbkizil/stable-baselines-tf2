@@ -133,14 +133,14 @@ class FeedForwardPolicy(DDPGPolicy):
             else:
                 pi_h = tf.keras.layers.Flatten()(obs)
             for i, layer_size in enumerate(self.layers):
-                pi_h = tf.keras.layers.Dense(layer_size, name='fc' + str(i))(pi_h)
+                pi_h = tf.keras.layers.Dense(pi_h, layer_size, name='fc' + str(i))
                 if self.layer_norm:
                     #pi_h = tf.contrib.layers.layer_norm(pi_h, center=True, scale=True)
                     pi_h = tf.keras.layers.LayerNormalization(pi_h, center=True, scale=True)
                 pi_h = self.activ(pi_h)
-            self.policy = tf.nn.tanh(tf.keras.layers.Dense( self.ac_space.shape[0], name=scope,
+            self.policy = tf.nn.tanh(tf.keras.layers.Dense(pi_h, self.ac_space.shape[0], name=scope,
                                                      kernel_initializer=tf.compat.v1.random_uniform_initializer(minval=-3e-3,
-                                                                                                      maxval=3e-3))(pi_h))
+                                                                                                      maxval=3e-3)))
         return self.policy
 
     def make_critic(self, obs=None, action=None, reuse=False, scope="qf"):
@@ -164,9 +164,9 @@ class FeedForwardPolicy(DDPGPolicy):
                     qf_h = tf.concat([qf_h, action], axis=-1)
 
             # the name attribute is used in pop-art normalization
-            qvalue_fn = tf.keras.layers.Dense(1, name='qf_output',
+            qvalue_fn = tf.keras.layers.Dense(qf_h, 1, name='qf_output',
                                         kernel_initializer=tf.compat.v1.random_uniform_initializer(minval=-3e-3,
-                                                                                         maxval=3e-3)(qf_h))
+                                                                                         maxval=3e-3))
 
             self.qvalue_fn = qvalue_fn
             self._qvalue = qvalue_fn[:, 0]
