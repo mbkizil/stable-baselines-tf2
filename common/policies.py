@@ -618,7 +618,7 @@ class FeedForwardPolicy(ActorCriticPolicy):
                     net_arch,
                     act_fun)
             else:
-                pi_latent, vf_latent = mlp_extractor(tf.keras.layers.Flatten()(self.processed_obs), net_arch, act_fun)
+                pi_latent, vf_latent = mlp_extractor(tf.keras.layers.Flatten(self.processed_obs), net_arch, act_fun)
 
             self._value_fn = linear(vf_latent, 'vf', 1)
 
