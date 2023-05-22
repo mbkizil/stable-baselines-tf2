@@ -155,7 +155,7 @@ class FeedForwardPolicy(DDPGPolicy):
             else:
                 qf_h = tf.keras.layers.Flatten()(obs)
             for i, layer_size in enumerate(self.layers):
-                qf_h = tf.keras.layers.Dense(layer_size, name='fc' + str(i))(qf_h)
+                qf_h = tf.keras.layers.Dense(qf_h, layer_size, name='fc' + str(i))
                 if self.layer_norm:
                     #qf_h = tf.contrib.layers.layer_norm(qf_h, center=True, scale=True)
                     qf_h = tf.keras.layers.LayerNormalization(qf_h, center=True, scale=True)
